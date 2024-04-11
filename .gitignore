@@ -1,0 +1,6 @@
+*.gff
+*.gaf
+*.gz
+SGD-go-terms/*
+Phi-base-linkouts/*
+CGD-SGD-pombase/*
