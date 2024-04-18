@@ -1,7 +1,21 @@
 import pandas as pd
 import argparse
 from pathlib import Path
+from bs4 import BeautifulSoup
+import urllib.request as urllib2
 from datetime import datetime
+
+def download_CGD(outdir):
+    url = "http://www.candidagenome.org/download/phenotype/"
+    html = urllib2.urlopen(url).read()
+    soup = BeautifulSoup(html)
+    files = soup.find_all('a', href=True)
+    files = [s['href'] for s in files if "_phenotype_data.tab" in str(s)]
+    for file in files:
+        html = url+file
+        out = Path(outdir,file)
+        urllib2.urlretrieve(html, out)
+    return files
 
 def process_CGD_phenotypes(input_filename, output_filename):
     # provide column names
@@ -45,19 +59,23 @@ def main():
     parser = argparse.ArgumentParser(
     description="Reformats the CGD phenotype information",
     epilog="written by Helen Davison and Evelina Basenko")
-    parser.add_argument('-f','--file', \
-                        help="The CGD tab delimited file of phenotype data",
-                        required=True)
     args = parser.parse_args()
 
-    # Provide the filenames for the input and output .tab files
-    input_filename = args.file
-    output_filename = Path(input_filename).stem + "_PROCESSED_"+datetime.today().strftime('%Y-%b-%d') +".tab"
-    print("\033[33m{}\033[0;0m".format("\nProcessing file:"))
-    print(str(Path(input_filename)))
-    process_CGD_phenotypes(input_filename, output_filename)
-    print("\033[32m{}\033[0;0m".format('\nNew file saved to:'))
-    print(str(Path(output_filename).resolve())+"\n")
+    
+    # Download CGD phenottype files:
+    outdir = "CGD-phenotypes-"+datetime.today().strftime('%Y-%b-%d')
+    Path.mkdir(Path(outdir))
+    files = download_CGD(outdir)
+    for file in files:
+        # Provide the filenames for the input and output .tab files
+        input_filename = Path(outdir,file)
+        output_filename = Path(outdir, Path(input_filename).stem + "_PROCESSED_"+datetime.today().strftime('%Y-%b-%d') +".tab")
+        # Process the file
+        print("\033[33m{}\033[0;0m".format("\nProcessing file:"))
+        print(str(Path(input_filename)))
+        process_CGD_phenotypes(input_filename, output_filename)
+        print("\033[32m{}\033[0;0m".format('\nNew file saved to:'))
+        print(str(Path(output_filename).resolve())+"\n")
     return
 
 main()
