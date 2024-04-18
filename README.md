@@ -3,10 +3,16 @@ These scripts will retrieve various data from external databases, and where nece
 
 **Current databases supported:**
 - [PHIbase](http://www.phi-base.org/)
+    - Linkouts
 - [Pombase](https://www.pombase.org/)
+    - GO annotations 
 - [Flybase](http://flybase.org/)
+    - GO annotations 
 - [*Saccharomyces* Genome Database (SGD)](https://www.yeastgenome.org/)
+    - GO annotations 
 - [*Candida* Genome Database (CGD)](http://www.candidagenome.org/)
+    - GO annotations
+    - Phenotypes 
 
 ## GO term annotations
 **Data format that data loading need:**
