@@ -26,6 +26,7 @@ These scripts will retrieve various data from external databases, and where nece
 ### Scripts
 
 `process-CGD-phenotypes.py` - Downloads and processes CGD phenotypes
+
 **Usage:**
 ```
 python process-CGD-phenotypes.py
